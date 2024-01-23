@@ -1,26 +1,32 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 import { RotatingLines } from "react-loader-spinner";
 import { useNavigate, useParams } from "react-router-dom";
 import Categoria from "../../../models/Categoria";
-import { atualizar } from "../../../service/service";
+import { atualizar, buscar, cadastrar } from "../../../service/service";
 
 function FormCategoria() {
-
     const navigate = useNavigate();
 
     const [categoria, setCategoria] = useState<Categoria>({} as Categoria)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const {id} = useParams<{ id: string }>();
+    {/** useParams é um Hook do React Router que permite acessar parâmatros passados na URL */}
+    const { id } = useParams<{ id: string }>();
 
     async function buscarPorId(id: string) {
         try {
-            await buscarCategorias(`/categorias/${id}`, setCategoria)
-
+            await buscar(`/categorias/${id}`, setCategoria)
         } catch (error: any) {
-            if (error.toString().includes('403')) {
+            alert("Erro ao buscar pela Categoria")
+            console.log(error);
         }
     }
+
+    useEffect(() => {
+        if (id !== undefined) {
+            buscarPorId(id)
+        }
+    }, [id])
 
     function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
         setCategoria({
@@ -40,19 +46,18 @@ function FormCategoria() {
         if (id !== undefined) {
             try {
                 await atualizar(`/categorias`, categoria, setCategoria)
-                alert('A categoria foi atualizada com sucesso!')
+                alert('A Categoria foi atualizada com sucesso!')
             } catch (error: any) {
-                if (error.toString().includes('403')) {} else {
-                    alert('Erro ao atualizar a categoria.')
-                }
-
+                alert("Erro ao buscar pela Categoria")
+                console.log(error);
             }
         } else {
             try {
-                await cadastrarCategoria(`/categorias`, categoria, setCategoria)
-                alert('A categoria foi cadastrada com sucesso!')
+                await cadastrar(`/categorias`, categoria, setCategoria)
+                alert('A Categoria foi atualizada com sucesso!')
             } catch (error: any) {
-                    alert('Erro ao cadastrar a categoria.')
+            
+
             }
         }
 
@@ -73,13 +78,13 @@ function FormCategoria() {
                         type="text"
                         placeholder="Descreva aqui sua categoria"
                         name='descricao'
-                        className="border-2 hover:bg-rose-800 p-2"
-                        value={categoria.descricao}
+                        className="border-2 border-rose-900 rounded p-2"
+                        value={categoria.tipo}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
                     />
                 </div>
                 <button
-                    className="rounded text-slate-100 bg-rose-600 
+                    className="rounded text-slate-100 bg-rose-400 
                                hover:bg-rose-800 w-1/2 py-2 mx-auto flex justify-center"
                     type="submit">
 
@@ -101,11 +106,4 @@ function FormCategoria() {
     );
 }
 
-function buscarCategorias(arg0: string, setCategoria: Dispatch<SetStateAction<Categoria>>) {
-        throw new Error("Function not implemented.");
-    }
-    function cadastrarCategoria(arg0: string, categoria: Categoria, setCategoria: Dispatch<SetStateAction<Categoria>>){
-        throw new Error("Function not implemented.");
-    }
-}
 export default FormCategoria;
