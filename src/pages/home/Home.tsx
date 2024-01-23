@@ -51,7 +51,7 @@ function Home() {
                         justify-center
                         ">
                         <img
-                            src="https://ik.imagekit.io/AlineConchetta/lojagames/ImagemGame.PNG?updatedAt=1706022272906"
+                            src="https://ik.imagekit.io/AlineConchetta/lojagames/Video%20game%20developer-pana.png?updatedAt=1706023122770"
                             alt="Imagem da Página Home"
                             className="w-2/3"
                         />
